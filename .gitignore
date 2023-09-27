@@ -1,0 +1,11 @@
+src/nix/_nix_api_*.c
+*.o
+*.so
+__pycache__
+build/
+/dist/
+/src/python_nix.egg-info/
+docs/_build/
+/result
+.direnv/
+.direnv
