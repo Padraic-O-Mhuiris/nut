@@ -11,6 +11,7 @@
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
+
   };
 
   outputs = inputs@{ flake-parts, nixpkgs, python-nix, ... }:
@@ -37,6 +38,7 @@
         nut = import ./nix { inherit lib; };
 
         inherit (nut) Test TestCase TestBlock Assertion;
+        pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
       in {
         inherit inputs;
         inherit lib;
