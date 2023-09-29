@@ -25,9 +25,20 @@
           python-nix-packages = inputs'.python-nix.packages.default;
         in {
           buildInputs = [ nix-c-bindings-package ] ++ (with pkgs; [
+            pkg-config
             black
-            (python3.withPackages
-              (p: [ python-nix-packages ] ++ (with p; [ click rich ])))
+            nodePackages.pyright
+            isort
+            (python3.withPackages (p:
+              [ python-nix-packages ] ++ (with p; [
+                click
+                rich
+                pytest
+                pyflakes
+                nose
+                setuptools
+                pylint
+              ])))
           ]);
         });
       };
