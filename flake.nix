@@ -24,11 +24,11 @@
           nix-c-bindings-package = inputs'.nix-c-bindings.packages.default;
           python-nix-packages = inputs'.python-nix.packages.default;
         in {
-          buildInputs = [ nix-c-bindings-package ] ++ (with pkgs;
-            [
-              (python3.withPackages
-                (p: [ python-nix-packages ] ++ (with p; [ click ])))
-            ]);
+          buildInputs = [ nix-c-bindings-package ] ++ (with pkgs; [
+            black
+            (python3.withPackages
+              (p: [ python-nix-packages ] ++ (with p; [ click rich ])))
+          ]);
         });
       };
 
@@ -44,7 +44,22 @@
         inherit lib;
         inherit nut;
 
-        test = Test "MyTest" [ (TestCase "TestCase 0" (Assertion.equals 1 1)) ];
+        test = Test "MyTest" [
+          (TestCase "TestCase 0" (Assertion.equals 1 1))
+          (TestCase "TestCase 1" (Assertion.equals 1 1))
+          (TestCase "TestCase 2" (Assertion.equals 1 1))
+          (TestCase "TestCase 3" (Assertion.equals 1 1))
+          (TestCase "TestCase 4" (Assertion.equals 1 1))
+          (TestCase "TestCase 5" (Assertion.equals 1 1))
+          (TestBlock "TestBlock 0" [
+            (TestCase "TestCase 0" (Assertion.equals 1 1))
+            (TestCase "TestCase 1" (Assertion.equals 1 1))
+            (TestCase "TestCase 2" (Assertion.equals 1 1))
+            (TestCase "TestCase 3" (Assertion.equals 1 1))
+            (TestCase "TestCase 4" (Assertion.equals 1 1))
+            (TestCase "TestCase 5" (Assertion.equals 1 1))
+          ])
+        ];
       };
     };
 }

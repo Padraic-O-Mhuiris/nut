@@ -57,6 +57,7 @@ in rec {
     let testTree = (imap0 (idx: fn: fn "${toString idx}") testMatrix);
     in {
       __test__ = "__test_root__";
+      inherit message;
       value = testTree;
     };
 }
