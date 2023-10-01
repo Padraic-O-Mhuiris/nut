@@ -1,58 +1,136 @@
-from pathlib import PurePath
+from pathlib import PurePath, PurePosixPath
+from collections import OrderedDict
+from typing import Dict, List, cast
+from typing_extensions import assert_never
 import unittest
 import nix.expr
+import nix
 import os
-import pytest
 from allpairspy import AllPairs
 from nut.nut_safe_nix_value import safe_nix_eval
 
 
 class Test__nut_safe_nix_value(unittest.TestCase):
-    @pytest.mark.parametrize(
-        [
-            "input_value",
-        ],
-        [
-            values
-            for values in AllPairs(
-                [
-                    [
-                        '"a"',
-                        '"wlxqnxnqkwkqkw"',
-                        "2",
-                        "2.11212",
-                        "null",
-                    ],
-                ]
-            )
-        ],
-    )
-    def test__safe_nix_eval(self, input_value):
-        parameters = [
-            ["BrandX", "BrandY"],
-            ["Small", "Medium", "Large"],
-            ["Red", "Green", "Blue"],
-        ]
+    def test__safe_nix_eval(self):
+        parameters = OrderedDict(
+            {
+                "inputs": [
+                    '"a"',
+                    '"wlxqnxnqkwkqkw"',
+                    "2",
+                    "2.11212",
+                    "null",
+                    "./../x",
+                    "./.",
+                    # "/",
+                    "/ssss",
+                    "true",
+                    "false",
+                    "1 == 2",
+                    "null",
+                    "(x: x)",
+                    "[]",
+                    "[1 2]",
+                    "{ a = 3; }",
+                    "let s = rec { x = { y = (arg: arg); }; z = (x.y a.b); a = { b = 2.0; }; }; in s.z",
+                ],
+                "other": [""],
+            }
+        )
         for test_case in AllPairs(parameters):
             with self.subTest(test_case=test_case):
-                brand, size, color = test_case
-                # Perform the actual test with the generated test_case
-                self.run(brand, size, color)
-
-    def run(self, brand, size, color):
-        print(brand, size, color)
-        # if brand == "BrandX":
-        #     self.assertNotEqual(
-        #         color, "Red", f"BrandX should not have color Red. Size: {size}"
-        #     )
-
-        # # Assert that if size is "Small", brand should not be "BrandY"
-        # if size == "Small":
-        #     self.assertNotEqual(
-        #         brand,
-        #         "BrandY",
-        #         f"Small size should not have brand BrandY. Color: {color}",
-        #     )
+                input = test_case[0]
+                safe_nix_value = safe_nix_eval(input)
+                if safe_nix_value.success:
+                    match safe_nix_value.type:
+                        case nix.expr.Type.int:
+                            self.assertIsInstance(
+                                safe_nix_value.result,
+                                int,
+                                f"Expected inner value: {safe_nix_value.result} to be an int, got: {type(safe_nix_value.result)}",
+                            )
+                            self.assertEqual(safe_nix_value.result, int(input))
+                            self.assertEqual(safe_nix_value.error, None)
+                        case nix.expr.Type.float:
+                            self.assertIsInstance(
+                                safe_nix_value.result,
+                                float,
+                                f"Expected inner value: {safe_nix_value.result} to be a string, got: {type(safe_nix_value.result)}",
+                            )
+                            self.assertEqual(safe_nix_value.error, None)
+                        case nix.expr.Type.string:
+                            self.assertIsInstance(
+                                safe_nix_value.result,
+                                str,
+                                f"Expected inner value: {safe_nix_value.result} to be a string, got: {type(safe_nix_value.result)}",
+                            )
+                            self.assertEqual(safe_nix_value.result, input[1:-1])
+                            self.assertEqual(safe_nix_value.error, None)
+                        case nix.expr.Type.bool:
+                            self.assertIsInstance(
+                                safe_nix_value.result,
+                                bool,
+                                f"Expected inner value: {safe_nix_value.result} to be a bool, got: {type(safe_nix_value.result)}",
+                            )
+                            self.assertEqual(safe_nix_value.error, None)
+                        case nix.expr.Type.null:
+                            self.assertIsInstance(
+                                safe_nix_value.result,
+                                type(None),
+                                f"Expected inner value: {safe_nix_value.result} to be a None, got: {type(safe_nix_value.result)}",
+                            )
+                            self.assertEqual(safe_nix_value.result, None)
+                            self.assertEqual(safe_nix_value.error, None)
+                        case nix.expr.Type.path:
+                            self.assertIsInstance(
+                                safe_nix_value.result,
+                                PurePosixPath,
+                                f"Expected inner value: {safe_nix_value.result} to be a PurePosixPath, got: {type(safe_nix_value.result)}",
+                            )
+                            self.assertEqual(
+                                safe_nix_value.result,
+                                PurePath(
+                                    os.path.realpath(
+                                        os.path.join(os.path.dirname(__file__), input)
+                                    )
+                                ),
+                            )
+                            self.assertEqual(safe_nix_value.error, None)
+                        case nix.expr.Type.function:
+                            self.assertIsInstance(
+                                safe_nix_value.result,
+                                nix.expr.Function,
+                                f"Expected inner value: {safe_nix_value.result} to be a Nix Function, got: {type(safe_nix_value.result)}",
+                            )
+                            self.assertEqual(safe_nix_value.error, None)
+                        case nix.expr.Type.external:
+                            self.assertIsInstance(
+                                safe_nix_value.result,
+                                nix.expr.ExternalValue,
+                                f"Expected inner value: {safe_nix_value.result} to be a Nix ExternalValue, got: {type(safe_nix_value.result)}",
+                            )
+                            self.assertEqual(safe_nix_value.error, None)
+                        case nix.expr.Type.attrs:
+                            self.assertIsInstance(
+                                safe_nix_value.result,
+                                Dict,
+                                f"Expected inner value: {safe_nix_value.result} to be a Dict, got: {type(safe_nix_value.result)}",
+                            )
+                            self.assertEqual(safe_nix_value.error, None)
+                            for k, v in (cast(Dict, safe_nix_value.result)).items():
+                                self.assertIsInstance(k, str)
+                                self.assertIsInstance(v, nix.expr.Value)
+                        case nix.expr.Type.list:
+                            self.assertIsInstance(
+                                safe_nix_value.result,
+                                List,
+                                f"Expected inner value: {safe_nix_value.result} to be a List, got: {type(safe_nix_value.result)}",
+                            )
+                            self.assertEqual(safe_nix_value.error, None)
+                            for v in cast(List, safe_nix_value.result):
+                                self.assertIsInstance(v, nix.expr.Value)
+                        case _:
+                            assert_never()
 
 
 # def test_eval_string(self):
