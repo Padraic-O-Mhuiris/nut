@@ -134,7 +134,7 @@ def safe_nix_value(nix_value: nix.expr.Value) -> SafeNixValue:
         return SafeNixError(error=e)
 
 
-def safe_nix_eval(value: str, path: str = ".") -> SafeNixValue:
+def safe_nix_eval(value: str) -> SafeNixValue:
 
     frame = inspect.stack()[1]
     file_name = frame.filename

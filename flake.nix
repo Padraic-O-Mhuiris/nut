@@ -39,6 +39,7 @@
                 setuptools
                 pylint
                 typing-extensions
+                allpairspy
               ])))
           ]);
         });
