@@ -234,6 +234,7 @@ logging-format-style=old
 # function parameter format.
 logging-modules=logging
 
+logging-cli=yes
 
 [SIMILARITIES]
 

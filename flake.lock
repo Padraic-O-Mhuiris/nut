@@ -220,15 +220,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1694350287,
-        "narHash": "sha256-YGx6TIzQHmoU7q/LaiDmGAtCFZw3ELrzHePmQf1lqTI=",
-        "owner": "tweag",
+        "lastModified": 1696078276,
+        "narHash": "sha256-qy4ix62HeRTFTEtf+eAijt+H4nkQYCC3zIdn46Q8Yzg=",
+        "owner": "Padraic-O-Mhuiris",
         "repo": "python-nix",
-        "rev": "2ce3752f8880e7453b29504988f3c331dfe970ea",
+        "rev": "e2ed85adeb8bf750f1be04827d71a55b63995936",
         "type": "github"
       },
       "original": {
-        "owner": "tweag",
+        "owner": "Padraic-O-Mhuiris",
         "repo": "python-nix",
         "type": "github"
       }

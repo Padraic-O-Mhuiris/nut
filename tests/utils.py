@@ -1,21 +1,17 @@
 import nix
-from nix.store import Store
-from nix.expr import State
+import nix.store
 
 
-def safe_nix_eval(nix_string_value: str) -> tuple[nix.expr.Value | None, bool]:
-    """Allows a safe execution context"""
-    store = Store()
-    state = State([], store)
-    nix_value: nix.expr.Value = state.eval_string(nix_string_value, ".")
+class NutTestError(Exception):
+    """Raised for errors in the application's testing logic"""
 
-    return (None, False)
+    pass
 
 
-# def safe_nix_eval(nix_string_value: str) -> tuple[nix.expr.Value | None, bool]:
-#     """Allows a safe execution context"""
-#     store = Store()
-#     state = State([], store)
-#     nix_value: nix.expr.Value = state.eval_string(nix_string_value, ".")
-
-#     return (None, False)
+def nix_value_from_python(
+    v: nix.expr.Evaluated | nix.expr.DeepEvaluated,
+) -> nix.expr.Value:
+    try:
+        return nix.expr.State([], nix.store.Store()).val_from_python(v)
+    except Exception as e:
+        raise NutTestError("Nix Value construction failed!") from e

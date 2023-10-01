@@ -4,7 +4,7 @@
   inputs = {
     # nixpkgs.url = "github:NixOS/nixpkgs/master";
 
-    python-nix.url = "github:tweag/python-nix";
+    python-nix.url = "github:Padraic-O-Mhuiris/python-nix";
 
     nix-c-bindings.url = "github:tweag/nix/nix-c-bindings";
     nixpkgs.follows = "nix-c-bindings/nixpkgs";
@@ -38,6 +38,7 @@
                 nose
                 setuptools
                 pylint
+                typing-extensions
               ])))
           ]);
         });
@@ -54,6 +55,8 @@
         inherit inputs;
         inherit lib;
         inherit nut;
+
+        some_path = ./my_file;
 
         test = Test "MyTest" [
           (TestCase "TestCase 0" (Assertion.equals 1 1))
