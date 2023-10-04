@@ -4,17 +4,9 @@ import nix.store
 import os
 import inspect
 from typing import TypeAlias, Literal, Dict, List, Union, cast
-from typing_extensions import assert_never
+from typing_extensions import TypeGuard, assert_never
 from pathlib import PurePath
 from dataclasses import dataclass
-
-
-@dataclass
-class SafeNixBase:
-    result: nix.expr.Evaluated
-    type: nix.expr.Type
-    error: None = None
-    success: Literal[True] = True
 
 
 @dataclass
@@ -26,87 +18,74 @@ class SafeNixError:
 
 
 @dataclass
-class SafeNixString:
+class SafeNixBase:
+    result: nix.expr.Evaluated
+    type: nix.expr.Type
+    error: None = None
+    success: Literal[True] = True
+
+
+@dataclass
+class SafeNixString(SafeNixBase):
     result: str
     type: Literal[nix.expr.Type.string] = nix.expr.Type.string
-    error: None = None
-    success: Literal[True] = True
 
 
 @dataclass
-class SafeNixBool:
+class SafeNixBool(SafeNixBase):
     result: bool
     type: Literal[nix.expr.Type.bool] = nix.expr.Type.bool
-    error: None = None
-    success: Literal[True] = True
 
 
 @dataclass
-class SafeNixInt:
+class SafeNixInt(SafeNixBase):
     result: int
     type: Literal[nix.expr.Type.int] = nix.expr.Type.int
-    error: None = None
-    success: Literal[True] = True
 
 
 @dataclass
-class SafeNixFloat:
+class SafeNixFloat(SafeNixBase):
     result: float
     type: Literal[nix.expr.Type.float] = nix.expr.Type.float
-    error: None = None
-    success: Literal[True] = True
 
 
 @dataclass
-class SafeNixNull:
+class SafeNixNull(SafeNixBase):
     result: None = None
     type: Literal[nix.expr.Type.null] = nix.expr.Type.null
-    error: None = None
-    success: Literal[True] = True
 
 
 @dataclass
-class SafeNixPath:
+class SafeNixPath(SafeNixBase):
     result: PurePath
     type: Literal[nix.expr.Type.path] = nix.expr.Type.path
-    error: None = None
-    success: Literal[True] = True
 
 
 @dataclass
-class SafeNixFunction:
+class SafeNixFunction(SafeNixBase):
     result: nix.expr.Function
     type: Literal[nix.expr.Type.function] = nix.expr.Type.function
-    error: None = None
-    success: Literal[True] = True
 
 
 @dataclass
-class SafeNixExternal:
+class SafeNixExternal(SafeNixBase):
     result: nix.expr.ExternalValue
     type: Literal[nix.expr.Type.external] = nix.expr.Type.external
-    error: None = None
-    success: Literal[True] = True
 
 
 @dataclass
-class SafeNixAttrs:
+class SafeNixAttrs(SafeNixBase):
     result: Dict[str, nix.expr.Value]
     type: Literal[nix.expr.Type.attrs] = nix.expr.Type.attrs
-    error: None = None
-    success: Literal[True] = True
 
 
 @dataclass
-class SafeNixList:
+class SafeNixList(SafeNixBase):
     result: List[nix.expr.Value]
     type: Literal[nix.expr.Type.list] = nix.expr.Type.list
-    error: None = None
-    success: Literal[True] = True
 
 
 SafeNixValue: TypeAlias = Union[
-    SafeNixError,
     SafeNixInt,
     SafeNixBool,
     SafeNixString,
@@ -120,7 +99,7 @@ SafeNixValue: TypeAlias = Union[
 ]
 
 
-def safe_nix_value(nix_value: nix.expr.Value) -> SafeNixValue:
+def safe_nix_value(nix_value: nix.expr.Value) -> SafeNixValue | SafeNixError:
     try:
         nix_value_type: nix.expr.Type = nix_value.get_type()
         evaluated_nix_value: nix.expr.Evaluated = nix_value.force(
@@ -163,7 +142,7 @@ def safe_nix_value(nix_value: nix.expr.Value) -> SafeNixValue:
         return SafeNixError(error=e)
 
 
-def safe_nix_eval(value: str) -> SafeNixValue:
+def safe_nix_eval(value: str) -> SafeNixValue | SafeNixError:
 
     frame = inspect.stack()[1]
     file_name = frame.filename

@@ -22,13 +22,6 @@ in rec {
       else
         acc ++ [ (fn item) ]) [ ] testMatrix.value;
 
-  # countTests = testMatrix:
-  #   foldl (acc: item:
-  #     if (item.__test__ == "__test_branch__") then
-  #       acc + (countTests item)
-  #     else
-  #       acc + 1) 0 testMatrix.value;
-
   Assertion.equals = left: right: {
     type = testType.EQUALS;
     inherit left right;

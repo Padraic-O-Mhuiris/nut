@@ -1,6 +1,5 @@
 import nix
-
-from nut.nut_utils import safe_nix_value_force
+from nut.nut_safe_nix_value import safe_nix_value
 
 
 class NutBaseError(Exception):
@@ -12,10 +11,12 @@ class NutBaseError(Exception):
 class NutBase:
     def __init__(self, nix_value: nix.expr.Value):
         self.nix_value: nix.expr.Value = nix_value
-        (result, exception, success) = safe_nix_value_force(nix_value)
-        if success:
-            self.value: nix.expr.Evaluated = result
+        _value = safe_nix_value(nix_value)
+
+        if _value.success is True:
+            self.value = _value.result
+            self.type = _value.type
         else:
             raise NutBaseError(
                 "Unexpected Evaluation: Could not evaluate nix_value"
-            ) from exception
+            ) from _value.error
