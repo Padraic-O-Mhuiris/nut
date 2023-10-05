@@ -45,4 +45,4 @@ class NutNode(NutBase):
     #     return f"<NutNode: {self.id} | {self.message}>"
 
     def __str__(self):
-        return f"~ message: {self.message}, id: {self.id} ~"
+        return f"~ message: {self.message}, id: {self.id}, result: {self.result} ~"
