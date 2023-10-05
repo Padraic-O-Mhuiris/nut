@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Dict, Literal, TypeAlias, Union
 import nix
 from nut.nut_safe_nix_value import safe_nix_attr_get, safe_nix_value
@@ -19,10 +21,14 @@ NutTestId: TypeAlias = Union[
 
 class NutBase:
     result: Dict[str, nix.expr.Value]
-    id: NutTestId
+    id: str
+    depth: int
 
-    def __init__(self, nix_value: nix.expr.Value, nut_test_id: NutTestId):
+    def __init__(self, nix_value: nix.expr.Value, depth: int):
         self.nix_value: nix.expr.Value = nix_value
+        self.depth = depth
+        self.spaces = " " * 2 * (self.depth + 1)
+
         _value = safe_nix_value(nix_value)
 
         if _value.success is True:
@@ -46,46 +52,21 @@ class NutBase:
                 f"Evaluation for nix value under __test__ on attrset f{self.result} failed!"
             )
 
-        if id.result != nut_test_id:
+        if id.type is not nix.expr.Type.string:
             raise NutBaseError(
-                f"Incorrect test identifier found, expected {nut_test_id}, got {id.result}"
-            )
-        self.id = nut_test_id
-
-    def __repr__(self):
-        return f"<NutBase: {self.id} >"
-
-    def __str__(self):
-        return f"id: {self.id}"
-
-
-class NutNode(NutBase):
-    message: str
-
-    def __init__(self, nix_value: nix.expr.Value, nut_test_id: NutTestId):
-        super().__init__(nix_value, nut_test_id)
-
-        message = safe_nix_attr_get(self.result, "message")
-
-        if message is None:
-            raise NutBaseError(
-                f"Could not find key message under attrset {self.result}"
+                f"Evaluation for nix value under __test__ on attrset f{self.result} failed!"
             )
 
-        if message.success is False:
-            raise NutBaseError(
-                f"Evaluation for nix value under message on attrset {self.result} failed!"
-            )
+        self.id = id.result
 
-        if message.type is not nix.expr.Type.string:
-            raise NutBaseError(
-                f'Expected value under key "message" on attrset {self.result} to be of type string'
-            )
+    # def __repr__(self):
+    #     return f"<NutBase: {self.id} >"
 
-        self.message = message.result
-
-    def __repr__(self):
-        return f"<NutNode: {self.id} | {self.message}>"
-
-    def __str__(self):
-        return f"message: {self.message}\n{super().__str__()}"
+    # def __str__(self):
+    #     return (
+    #         self.spaces
+    #         + f"id: {self.id}"
+    #         + "\n"
+    #         + self.spaces
+    #         + f"result: {self.result}"
+    #     )

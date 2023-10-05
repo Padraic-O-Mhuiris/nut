@@ -1,10 +1,14 @@
-from nut.nut_base import NutNode
+from __future__ import annotations
+
+from nut.nut_node import NutNode
 import nix
-from nut.nut_assertion import NutAssertion
 
 
 class NutTestCase(NutNode):
-    value: NutAssertion
+    # value: NutAssertion
 
-    def __init__(self, nix_value: nix.expr.Value):
-        super().__init__(nix_value, "__test_case__")
+    def __init__(self, nix_value: nix.expr.Value, depth: int):
+        super().__init__(nix_value, "__test_case__", depth)
+
+    def __str__(self):
+        return f"<NixTestCase {super().__str__()}>"

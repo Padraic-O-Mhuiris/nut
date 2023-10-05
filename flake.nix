@@ -67,12 +67,12 @@
           (TestCase "TestCase 4" (Assertion.equals 1 1))
           (TestCase "TestCase 5" (Assertion.equals 1 1))
           (TestBlock "TestBlock 0" [
-            (TestCase "TestCase 0" (Assertion.equals 1 1))
-            (TestCase "TestCase 1" (Assertion.equals 1 1))
-            (TestCase "TestCase 2" (Assertion.equals 1 1))
-            (TestCase "TestCase 3" (Assertion.equals 1 1))
-            (TestCase "TestCase 4" (Assertion.equals 1 1))
-            (TestCase "TestCase 5" (Assertion.equals 1 1))
+            (TestCase "TestCase 0.1" (Assertion.equals 1 1))
+            (TestCase "TestCase 1.2" (Assertion.equals 1 1))
+            (TestCase "TestCase 2.3" (Assertion.equals 1 1))
+            (TestCase "TestCase 3.4" (Assertion.equals 1 1))
+            (TestCase "TestCase 4.5" (Assertion.equals 1 1))
+            (TestCase "TestCase 5.6" (Assertion.equals 1 1))
           ])
         ];
       };
