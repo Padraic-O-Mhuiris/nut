@@ -4,7 +4,7 @@ import nix.store
 import os
 import inspect
 from typing import TypeAlias, Literal, Dict, List, Union, cast
-from typing_extensions import TypeGuard, assert_never
+from typing_extensions import assert_never
 from pathlib import PurePath
 from dataclasses import dataclass
 
@@ -150,3 +150,14 @@ def safe_nix_eval(value: str) -> SafeNixValue | SafeNixError:
     directory = os.path.dirname(absolute_file_path)
 
     return safe_nix_value(nix.eval(value, directory))
+
+
+def safe_nix_attr_get(
+    attr: Dict[str, nix.expr.Value], k: str
+) -> SafeNixValue | SafeNixError | None:
+
+    v = attr.get(k)
+    if v is None:
+        return v
+
+    return safe_nix_value(v)
