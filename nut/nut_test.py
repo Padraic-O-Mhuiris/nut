@@ -16,4 +16,4 @@ class NutTest(NutBranch):
         super().__init__(nix_value, "__test_root__", 0)
 
     def __repr__(self):
-        return f"<NixTest {super().__repr__()}>"
+        return f"<NixTest {super().__repr__()}\n>"

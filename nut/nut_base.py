@@ -27,7 +27,6 @@ class NutBase:
     def __init__(self, nix_value: nix.expr.Value, depth: int):
         self.nix_value: nix.expr.Value = nix_value
         self.depth = depth
-        self.spaces = " " * 2 * (self.depth + 1)
 
         _value = safe_nix_value(nix_value)
 

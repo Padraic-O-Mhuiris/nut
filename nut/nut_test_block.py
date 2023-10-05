@@ -49,15 +49,9 @@ class NutBranch(NutNode):
     def __repr__(self):
         inner: str = ""
         for v in self.value:
-            if self.id == "__test_branch__":
-                inner += f"\n{self.spaces}    {v.__repr__()}"
-            else:
-                inner += f"\n{self.spaces}  {v.__repr__()}"
+            inner += f"\n{self.offset}{v.__repr__()}"
 
-        if self.id == "__test_branch__":
-            return f"{super().__repr__()}\n{self.spaces}  [{inner}\n{self.spaces}  ]"
-        else:
-            return f"{super().__repr__()}\n{self.spaces}[{inner}\n{self.spaces}]"
+        return f"{super().__repr__()} [{inner}\n{self.spaces}{self.offset}]"
 
 
 class NutTestBlock(NutBranch):
@@ -65,4 +59,4 @@ class NutTestBlock(NutBranch):
         super().__init__(nix_value, "__test_branch__", depth)
 
     def __repr__(self):
-        return f"<NixTestBlock {super().__repr__()}>"
+        return f"{self.spaces}<NixTestBlock {super().__repr__()}\n{self.spaces}{self.spaces}>"
