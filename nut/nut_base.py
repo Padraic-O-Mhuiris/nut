@@ -58,15 +58,3 @@ class NutBase:
             )
 
         self.id = id.result
-
-    # def __repr__(self):
-    #     return f"<NutBase: {self.id} >"
-
-    # def __str__(self):
-    #     return (
-    #         self.spaces
-    #         + f"id: {self.id}"
-    #         + "\n"
-    #         + self.spaces
-    #         + f"result: {self.result}"
-    #     )

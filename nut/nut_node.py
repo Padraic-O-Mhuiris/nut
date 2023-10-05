@@ -41,8 +41,5 @@ class NutNode(NutBase):
 
         self.message = message.result
 
-    # def __repr__(self):
-    #     return f"<NutNode: {self.id} | {self.message}>"
-
-    def __str__(self):
+    def __repr__(self):
         return f"~ message: {self.message}, id: {self.id}, result: {self.result} ~"

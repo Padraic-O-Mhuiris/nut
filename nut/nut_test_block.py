@@ -46,23 +46,23 @@ class NutBranch(NutNode):
             elif item.id == "__test_case__":
                 self.value = self.value + [NutTestCase(unevaluated_item, depth + 1)]
 
-    def __str__(self):
+    def __repr__(self):
         inner: str = ""
         for v in self.value:
             if self.id == "__test_branch__":
-                inner += f"\n{self.spaces}    {v.__str__()}"
+                inner += f"\n{self.spaces}    {v.__repr__()}"
             else:
-                inner += f"\n{self.spaces}  {v.__str__()}"
+                inner += f"\n{self.spaces}  {v.__repr__()}"
 
         if self.id == "__test_branch__":
-            return f"{super().__str__()}\n{self.spaces}  [{inner}\n{self.spaces}  ]"
+            return f"{super().__repr__()}\n{self.spaces}  [{inner}\n{self.spaces}  ]"
         else:
-            return f"{super().__str__()}\n{self.spaces}[{inner}\n{self.spaces}]"
+            return f"{super().__repr__()}\n{self.spaces}[{inner}\n{self.spaces}]"
 
 
 class NutTestBlock(NutBranch):
     def __init__(self, nix_value: nix.expr.Value, depth: int):
         super().__init__(nix_value, "__test_branch__", depth)
 
-    def __str__(self):
-        return f"<NixTestBlock {super().__str__()}>"
+    def __repr__(self):
+        return f"<NixTestBlock {super().__repr__()}>"

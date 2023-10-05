@@ -10,5 +10,5 @@ class NutTestCase(NutNode):
     def __init__(self, nix_value: nix.expr.Value, depth: int):
         super().__init__(nix_value, "__test_case__", depth)
 
-    def __str__(self):
-        return f"<NixTestCase {super().__str__()}>"
+    def __repr__(self):
+        return f"<NixTestCase {super().__repr__()}>"
