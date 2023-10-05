@@ -57,3 +57,5 @@ class NutBase:
             )
 
         self.id = id.result
+        self.spaces = "  " * self.depth
+        self.offset = "  " * (self.depth + 1)

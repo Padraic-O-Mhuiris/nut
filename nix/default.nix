@@ -12,7 +12,7 @@ let
     let
       idHash =
         substring 0 10 (builtins.hashString "sha256" "${entropy}:${message}");
-    in "${entropy}::${idHash}";
+    in "${entropy}";
 
 in rec {
   treeMap = fn: testMatrix:
@@ -43,7 +43,7 @@ in rec {
       __test__ = "__test_branch__";
       inherit id message;
       value =
-        imap0 (idx: fn: (fn "${toString cntr}-${toString idx}")) testMatrix;
+        imap0 (idx: fn: (fn "${toString cntr}:${toString idx}")) testMatrix;
     };
 
   Test = message: testMatrix:

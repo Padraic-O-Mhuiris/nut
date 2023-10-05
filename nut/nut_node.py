@@ -40,9 +40,7 @@ class NutNode(NutBase):
             )
 
         self.message = message.result
-        self.spaces = "  " * self.depth
-        self.offset = "  " * (self.depth + 1)
 
     def __repr__(self):
         gap = self.spaces + self.offset
-        return f"\n{gap}message: {self.message}\n{gap}id: {self.id}\n{gap}spaces: {len(self.spaces)}\n{gap}depth: {self.depth}\n{gap}result: {self.result}\n{gap}value:"
+        return f"\n{gap}message: {self.message}\n{gap}id: {self.id}\n{gap}depth: {self.depth}\n{gap}result: {self.result}\n{gap}value:"

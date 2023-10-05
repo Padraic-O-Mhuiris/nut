@@ -25,4 +25,4 @@ class NutTestCase(NutNode):
             self.value = NutAssertion(v, self.depth + 1)
 
     def __repr__(self):
-        return f"{self.spaces}<NixTestCase {super().__repr__()}\n{self.spaces}{self.spaces}>"
+        return f"{self.spaces}<NixTestCase {super().__repr__()} {self.value}\n{self.spaces}{self.spaces}>"
