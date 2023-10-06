@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import nix
+from rich.tree import Tree
 
 from nut.nut_node import NutNode
 from nut.nut_safe_nix_value import safe_nix_attr_get
@@ -60,3 +61,8 @@ class NutTestBlock(NutBranch):
 
     def __repr__(self):
         return f"{self.spaces}<NixTestBlock {super().__repr__()}\n{self.spaces}{self.spaces}>"
+
+    def run(self, tree: Tree):
+        testBlockTree = tree.add(f"{self.message}")
+        for t in self.value:
+            t.run(testBlockTree)

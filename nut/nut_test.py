@@ -4,6 +4,9 @@ import nix
 
 from nut.nut_test_block import NutBranch
 
+from rich.tree import Tree
+from rich import print
+
 
 class NutTestError(Exception):
     """Raised for errors in the application's logic."""
@@ -17,3 +20,10 @@ class NutTest(NutBranch):
 
     def __repr__(self):
         return f"<NixTest {super().__repr__()}\n>"
+
+    def run(self):
+        tree = Tree(f"{self.message}")
+        for t in self.value:
+            t.run(tree)
+
+        print(tree)

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from nut.nut_safe_nix_value import safe_nix_attr_get
+from rich.tree import Tree
 from nut.nut_node import NutNode
 from nut.nut_assertion import NutAssertion
 import nix
@@ -13,6 +13,8 @@ class NutTestCaseError(Exception):
 
 
 class NutTestCase(NutNode):
+    value: NutAssertion
+
     def __init__(self, nix_value: nix.expr.Value, depth: int):
         super().__init__(nix_value, "__test_case__", depth)
 
@@ -26,3 +28,6 @@ class NutTestCase(NutNode):
 
     def __repr__(self):
         return f"{self.spaces}<NixTestCase {super().__repr__()} {self.value}\n{self.spaces}{self.spaces}>"
+
+    def run(self, tree: Tree):
+        self.value.run(tree.add(f"{self.message}"))

@@ -61,18 +61,25 @@
 
         test = Test "MyTest" [
           (TestCase "TestCase 0" (Assertion.equals 1 1))
+          (TestCase "TestCase 1" (Assertion.equals 1 1))
+          (TestCase "TestCase 2" (Assertion.equals 1 1))
+          (TestCase "TestCase 3" (Assertion.equals 1 1))
+          (TestCase "TestCase 4" (Assertion.equals 1 1))
+          (TestCase "TestCase 5" (Assertion.equals 1 1))
           (TestBlock "TestBlock 0" [
             (TestCase "TestCase 0.1" (Assertion.equals 1 1))
+            (TestCase "TestCase 1.2" (Assertion.equals 1 1))
+            (TestCase "TestCase 2.3" (Assertion.equals 1 1))
+            (TestCase "TestCase 3.4" (Assertion.equals 1 1))
+            (TestCase "TestCase 4.5" (Assertion.equals 1 1))
+            (TestCase "TestCase 5.6" (Assertion.equals 1 1))
             (TestBlock "TestBlock 1" [
               (TestCase "TestCase 012.1" (Assertion.equals 1 1))
-              (TestBlock "TestBlock 1211" [
-                (TestCase "TestCase 012.1" (Assertion.equals 1 1))
-                (TestBlock "TestBlock 12112" [
-                  (TestCase "TestCase 012.1" (Assertion.equals 1 1))
-                  (TestBlock "TestBlock 12112"
-                    [ (TestCase "TestCase 012.1" (Assertion.equals 1 1)) ])
-                ])
-              ])
+              (TestCase "TestCase 1.122" (Assertion.equals 1 1))
+              (TestCase "TestCase 2.3233" (Assertion.equals 1 1))
+              (TestCase "TestCase 323.4" (Assertion.equals 1 1))
+              (TestCase "TestCase 4.2325" (Assertion.equals 1 1))
+              (TestCase "TestCase 5.126" (Assertion.equals 1 1))
             ])
           ])
         ];

@@ -1,10 +1,19 @@
 from __future__ import annotations
+from dataclasses import dataclass
 
+from rich.tree import Tree
 from typing import Literal, cast
 from nut.nut_base import NutBase
 import nix
 
 from nut.nut_safe_nix_value import SafeNixError, SafeNixValue, safe_nix_attr_get
+
+
+@dataclass
+class AssertionResult:
+    passed: bool
+    warning: str | None
+    error: str | None
 
 
 class NutAssertionError(Exception):
@@ -51,3 +60,15 @@ class NutAssertion(NutBase):
 
     def __repr__(self):
         return f"<NixAssertion\n{self.spaces}{self.offset}result: {self.result}\n{self.spaces}{self.offset}type: {self.type}\n{self.spaces}{self.offset}left: {self.left}\n{self.spaces}{self.offset}right: {self.right}\n{self.spaces}{self.spaces}>"
+
+    def run(self, tree: Tree):
+        tree.add(f"Assertion :: {self.type}")
+
+    def evaluate(self) -> bool:
+        if self.type == "EQUALS":
+            if self.left.success & self.right.success:
+                return self.__evaluate_expected_success__()
+            else:
+                return False
+        else:
+            raise AssertionError(f"Assertion type {self.type} not found")

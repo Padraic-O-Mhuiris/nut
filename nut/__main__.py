@@ -41,11 +41,8 @@ def main(flake_ref: str):
         (relative_flake_path, target_flake_attr) = flake_ref.split("#")
 
     test_attr = get_flake_attr(relative_flake_path, target_flake_attr)
-    x = NutTest(test_attr)
-    # print(str(x.__inner_str__()))
-    # print(repr(x))
-
-    print(str(x))
+    print(str(NutTest(test_attr)))
+    NutTest(test_attr).run()
 
 
 if __name__ == "__main__":
